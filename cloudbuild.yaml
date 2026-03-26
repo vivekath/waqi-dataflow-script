@@ -17,7 +17,7 @@ steps:
         'asia-south2-docker.pkg.dev/project-5dd8f491-cc9c-4f1e-951/dataflow-docker-repo/dataflow-docker-repo-waqi:$BUILD_ID'
       ]
 
-  # Step 3: Build Flex Template JSON in GCS
+  # Step 3: Build Flex Template JSON in GCS (with --no-source to bypass _cloudbuild bucket)
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     args:
       [
@@ -29,7 +29,8 @@ steps:
         '--image-gcr-path','asia-south2-docker.pkg.dev/project-5dd8f491-cc9c-4f1e-951/dataflow-docker-repo/dataflow-docker-repo-waqi:$BUILD_ID',
         '--metadata-file','metadata.json',
         '--env','FLEX_TEMPLATE_PYTHON_PY_FILE=main.py',
-        '--env','FLEX_TEMPLATE_PYTHON_REQUIREMENTS_FILE=requirements.txt'
+        '--env','FLEX_TEMPLATE_PYTHON_REQUIREMENTS_FILE=requirements.txt',
+        '--no-source'
       ]
 
   # Step 4: (Optional) Launch Dataflow job automatically
