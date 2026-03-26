@@ -1,47 +1,48 @@
 steps:
-  # Step 1: Build Docker image from Dockerfile
+  # Step 1: Build Docker image for Dataflow Flex Template
   - name: 'gcr.io/cloud-builders/docker'
     args:
-      [
-        'build',
-        '-t',
-        'asia-south2-docker.pkg.dev/project-5dd8f491-cc9c-4f1e-951/dataflow-docker-repo/dataflow-docker-repo-waqi:$BUILD_ID',
-        '.'
-      ]
+      - 'build'
+      - '-t'
+      - 'asia-south2-docker.pkg.dev/project-5dd8f491-cc9c-4f1e-951/dataflow-docker-repo/dataflow-docker-repo-waqi:$BUILD_ID'
+      - '.'
 
   # Step 2: Push Docker image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
     args:
-      [
-        'push',
-        'asia-south2-docker.pkg.dev/project-5dd8f491-cc9c-4f1e-951/dataflow-docker-repo/dataflow-docker-repo-waqi:$BUILD_ID'
-      ]
+      - 'push'
+      - 'asia-south2-docker.pkg.dev/project-5dd8f491-cc9c-4f1e-951/dataflow-docker-repo/dataflow-docker-repo-waqi:$BUILD_ID'
 
-  # Step 3: Build Flex Template JSON in GCS
+  # Step 3: Build Dataflow Flex Template
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
     args:
-      [
-        'gcloud','dataflow','flex-template','build',
-        'gs://temp_test_bucket_25032026/templates/waqi_flex.json',
-        '--sdk-language','PYTHON',
-        '--flex-template-base-image','PYTHON3',
-        '--py-path','.',   # required for Python SDK
-        '--image-gcr-path','asia-south2-docker.pkg.dev/project-5dd8f491-cc9c-4f1e-951/dataflow-docker-repo/dataflow-docker-repo-waqi:$BUILD_ID',
-        '--metadata-file','metadata.json',
-        '--env','FLEX_TEMPLATE_PYTHON_PY_FILE=main.py',
-        '--env','FLEX_TEMPLATE_PYTHON_REQUIREMENTS_FILE=requirements.txt',
-        '--staging-location','gs://temp_test_bucket_25032026/staging',
-        '--temp-location','gs://temp_test_bucket_25032026/temp'
-      ]
+      - 'dataflow'
+      - 'flex-template'
+      - 'build'
+      - 'gs://temp_test_bucket_25032026/templates/waqi_flex.json'
+      - '--sdk-language=PYTHON'
+      - '--flex-template-base-image=PYTHON3'
+      - '--py-path=.'
+      - '--image-gcr-path=asia-south2-docker.pkg.dev/project-5dd8f491-cc9c-4f1e-951/dataflow-docker-repo/dataflow-docker-repo-waqi:$BUILD_ID'
+      - '--metadata-file=metadata.json'
+      - '--env=FLEX_TEMPLATE_PYTHON_PY_FILE=main.py'
+      - '--env=FLEX_TEMPLATE_PYTHON_REQUIREMENTS_FILE=requirements.txt'
+      - '--staging-location=gs://temp_test_bucket_25032026/staging'
+      - '--temp-location=gs://temp_test_bucket_25032026/temp'
 
-  # Step 4: (Optional) Launch Dataflow job automatically
+  # Step 4: Launch Dataflow Job from Flex Template
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
     args:
-      [
-        'gcloud','dataflow','flex-template','run','waqi-dataflow-run',
-        '--template-file-gcs-location','gs://temp_test_bucket_25032026/templates/waqi_flex.json',
-        '--region','asia-south2'
-      ]
+      - 'dataflow'
+      - 'flex-template'
+      - 'run'
+      - 'waqi-dataflow-job-$BUILD_ID'
+      - '--template-file-gcs-location=gs://temp_test_bucket_25032026/templates/waqi_flex.json'
+      - '--region=asia-south2'
+      - '--worker-machine-type=e2-standard-2'
+      - '--max-workers=3'
 
 images:
   - 'asia-south2-docker.pkg.dev/project-5dd8f491-cc9c-4f1e-951/dataflow-docker-repo/dataflow-docker-repo-waqi:$BUILD_ID'
