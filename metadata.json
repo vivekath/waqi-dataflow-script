@@ -1,0 +1,5 @@
+{
+  "name": "WAQI PubSub to BigQuery (Flex)",
+  "description": "Streaming WAQI pipeline from Pub/Sub to BigQuery bronze table",
+  "parameters": []
+}

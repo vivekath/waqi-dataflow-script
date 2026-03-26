@@ -1,0 +1,2 @@
+apache-beam[gcp]==2.71.0
+google-cloud-storage==2.19.0
