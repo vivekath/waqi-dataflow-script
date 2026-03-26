@@ -298,10 +298,6 @@ gcloud builds submit \
 """
 
 """
-gcloud builds submit --config=cloudbuild.yaml
-"""
-
-"""
 gcloud projects describe project-5dd8f491-cc9c-4f1e-951 --format="value(projectNumber)"
 
 
@@ -325,5 +321,38 @@ cloudbuild.googleapis.com \
 dataflow.googleapis.com \
 artifactregistry.googleapis.com \
 storage.googleapis.com \
-compute.googleapis.com
+compute.googleapis.com \
+serviceusage.googleapis.com
+"""
+
+
+"""
+PROJECT_ID=project-5dd8f491-cc9c-4f1e-951
+PROJECT_NUMBER=$(gcloud projects describe $PROJECT_ID --format="value(projectNumber)")
+
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+--member="serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com" \
+--role="roles/editor"
+
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+--member="serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com" \
+--role="roles/serviceusage.serviceUsageConsumer"
+
+gsutil iam ch \
+serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com:roles/storage.admin \
+gs://temp_test_bucket_25032026
+
+gsutil iam ch \
+serviceAccount:${PROJECT_NUMBER}@cloudbuild.gserviceaccount.com:roles/storage.admin \
+gs://project-5dd8f491-cc9c-4f1e-951_cloudbuild
+"""
+
+"""
+ERROR: (gcloud.dataflow.flex-template.build) The user is forbidden from accessing the bucket 
+[project-5dd8f491-cc9c-4f1e-951_cloudbuild]. Please check your organization's policy or if the user has the 
+"serviceusage.services.use" permission. Giving the user a role with this permission such as Service Usage Admin
+ may fix this issue. Alternatively, use the --no-source option and access your source code via a different method.
+Finished Step #2
+ERROR
+ERROR: build step 2 "gcr.io/google.com/cloudsdktool/cloud-sdk" failed: step exited with non-zero status: 1
 """
