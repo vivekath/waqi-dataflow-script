@@ -251,3 +251,41 @@ not consuming Pub/Sub messages).
 Yes, each service has a default service account. You must grant the right IAM roles to those accounts 
 (or use a custom service account) so the jobs can access Pub/Sub, BigQuery, GCS, Artifact Registry, etc.
 """
+
+"""
+# Allow Cloud Build service account to use APIs
+gcloud projects add-iam-policy-binding project-5dd8f491-cc9c-4f1e-951 \
+  --member="serviceAccount:306164924329@cloudbuild.gserviceaccount.com" \
+  --role="roles/serviceusage.serviceUsageConsumer"
+
+# Allow Cloud Build service account to write logs to its bucket
+gcloud storage buckets add-iam-policy-binding gs://project-5dd8f491-cc9c-4f1e-951_cloudbuild \
+  --member="serviceAccount:306164924329@cloudbuild.gserviceaccount.com" \
+  --role="roles/storage.objectAdmin"
+
+"""
+
+# To make your CI/CD pipeline fully functional, you’ll also want to grant this Cloud Build service account the roles 
+# it needs for the build steps:
+
+# Artifact Registry:
+"""
+gcloud artifacts repositories add-iam-policy-binding dataflow-docker-repo \
+  --location=asia-south2 \
+  --member="serviceAccount:306164924329@cloudbuild.gserviceaccount.com" \
+  --role="roles/artifactregistry.writer"
+"""
+
+# GCS bucket (for templates)::
+"""
+gcloud storage buckets add-iam-policy-binding temp_test_bucket_25032026 \
+  --member="serviceAccount:306164924329@cloudbuild.gserviceaccount.com" \
+  --role="roles/storage.admin"
+"""
+
+# Dataflow::
+"""
+gcloud projects add-iam-policy-binding project-5dd8f491-cc9c-4f1e-951 \
+  --member="serviceAccount:306164924329@cloudbuild.gserviceaccount.com" \
+  --role="roles/dataflow.admin"
+"""
