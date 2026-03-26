@@ -21,7 +21,7 @@ steps:
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     args:
       [
-        'dataflow','flex-template','build',
+        'gcloud','dataflow','flex-template','build',
         'gs://temp_test_bucket_25032026/templates/waqi_flex.json',
         '--sdk-language','PYTHON',
         '--flex-template-base-image','PYTHON3',
@@ -36,7 +36,7 @@ steps:
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     args:
       [
-        'dataflow','flex-template','run','waqi-dataflow-run',
+        'gcloud','dataflow','flex-template','run','waqi-dataflow-run',
         '--template-file-gcs-location','gs://temp_test_bucket_25032026/templates/waqi_flex.json',
         '--region','asia-south2'
       ]
