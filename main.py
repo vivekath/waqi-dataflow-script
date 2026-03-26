@@ -122,6 +122,7 @@ if __name__ == "__main__":
     run()
 
 
+
 """
 Integration Summary
 Cloud Scheduler → orchestrates timing.
