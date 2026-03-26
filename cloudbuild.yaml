@@ -25,10 +25,13 @@ steps:
         'gs://temp_test_bucket_25032026/templates/waqi_flex.json',
         '--sdk-language','PYTHON',
         '--flex-template-base-image','PYTHON3',
+        '--py-path','.',   # required for Python SDK
         '--image-gcr-path','asia-south2-docker.pkg.dev/project-5dd8f491-cc9c-4f1e-951/dataflow-docker-repo/dataflow-docker-repo-waqi:$BUILD_ID',
         '--metadata-file','metadata.json',
         '--env','FLEX_TEMPLATE_PYTHON_PY_FILE=main.py',
-        '--env','FLEX_TEMPLATE_PYTHON_REQUIREMENTS_FILE=requirements.txt'
+        '--env','FLEX_TEMPLATE_PYTHON_REQUIREMENTS_FILE=requirements.txt',
+        '--staging-location','gs://temp_test_bucket_25032026/staging',
+        '--temp-location','gs://temp_test_bucket_25032026/temp'
       ]
 
   # Step 4: (Optional) Launch Dataflow job automatically
