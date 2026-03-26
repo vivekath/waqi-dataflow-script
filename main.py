@@ -300,3 +300,30 @@ gcloud builds submit \
 """
 gcloud builds submit --config=cloudbuild.yaml
 """
+
+"""
+gcloud projects describe project-5dd8f491-cc9c-4f1e-951 --format="value(projectNumber)"
+
+
+gcloud projects add-iam-policy-binding project-5dd8f491-cc9c-4f1e-951 \
+--member="serviceAccount:306164924329@cloudbuild.gserviceaccount.com" \
+--role="roles/serviceusage.serviceUsageConsumer"
+
+gsutil iam ch \
+serviceAccount:306164924329@cloudbuild.gserviceaccount.com:roles/storage.admin \
+gs://project-5dd8f491-cc9c-4f1e-951_cloudbuild
+
+
+
+gsutil iam ch \
+serviceAccount:306164924329@cloudbuild.gserviceaccount.com:roles/storage.admin \
+gs://temp_test_bucket_25032026
+
+
+gcloud services enable \
+cloudbuild.googleapis.com \
+dataflow.googleapis.com \
+artifactregistry.googleapis.com \
+storage.googleapis.com \
+compute.googleapis.com
+"""
