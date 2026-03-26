@@ -289,3 +289,14 @@ gcloud projects add-iam-policy-binding project-5dd8f491-cc9c-4f1e-951 \
   --member="serviceAccount:306164924329@cloudbuild.gserviceaccount.com" \
   --role="roles/dataflow.admin"
 """
+
+"""
+gcloud builds submit \
+  --config=cloudbuild.yaml \
+  --service-account=306164924329@cloudbuild.gserviceaccount.com \
+  --logs-bucket=gs://temp_test_bucket_25032026
+"""
+
+"""
+gcloud builds submit --config=cloudbuild.yaml
+"""
